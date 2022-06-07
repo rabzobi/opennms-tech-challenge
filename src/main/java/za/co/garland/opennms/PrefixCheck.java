@@ -61,17 +61,17 @@ public class PrefixCheck {
 	 * @return selected algorithm
 	 */
 	private static SearchAlgorithm selectAlgorithm(String[] args) {
-		TrapTools.SearchAlgorithm sa = TrapTools.SearchAlgorithm.BINARY;
+		TrapTools.SearchAlgorithm sa = TrapTools.SearchAlgorithm.HALF;
 		if (args == null || args.length == 1 || args[1] == null) {
-			System.err.println("No algorithm given, defaulting to bin");			
-		} else if (args[1].equals("bin")) {
-			sa = TrapTools.SearchAlgorithm.BINARY;
+			System.err.println("No algorithm given, defaulting to half");			
+		} else if (args[1].equals("half")) {
+			sa = TrapTools.SearchAlgorithm.HALF;
 		} else if (args[1].equals("linear")) {
 			sa = TrapTools.SearchAlgorithm.LINEAR;			
 		} else if (args[1].equals("tree")) {
 			sa = TrapTools.SearchAlgorithm.TREE;			
 		} else {
-			System.err.println("Invalid algorithm given, defaulting to bin");
+			System.err.println("Invalid algorithm given, defaulting to half");
 		}
 		
 		return sa;

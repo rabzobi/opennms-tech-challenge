@@ -18,7 +18,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 public class TrapTools {
 
 	enum SearchAlgorithm {
-		LINEAR, BINARY, TREE
+		LINEAR, HALF, TREE
 	}
 
 	private Traps traps;
@@ -36,7 +36,7 @@ public class TrapTools {
 	}
 	
 	public TrapTools(String filename) throws IOException {
-		this.algorithm = SearchAlgorithm.BINARY;
+		this.algorithm = SearchAlgorithm.HALF;
 		loadData(filename);	
 	}
 
@@ -44,8 +44,8 @@ public class TrapTools {
 		switch (algorithm) {
 		case LINEAR:
 			return linearSearch(s);
-		case BINARY:
-			return binSearch(s);
+		case HALF:
+			return halfSearch(s);
 		case TREE:
 			return treeSearch(s);
 		}
@@ -61,9 +61,10 @@ public class TrapTools {
 	private void loadData(String filename) throws IOException {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		traps = mapper.readValue(new File(filename), Traps.class);
-		if (algorithm == SearchAlgorithm.BINARY) {
+		if (algorithm == SearchAlgorithm.HALF || algorithm == SearchAlgorithm.TREE) {
 			traps.trimAndSort();
-		} else if (algorithm == SearchAlgorithm.TREE) {
+		}
+		if (algorithm == SearchAlgorithm.TREE) {
 			buildTree();
 		}
 	}
@@ -91,28 +92,40 @@ public class TrapTools {
 			}
 		}
 	}
+	
+	/**
+	 * Run a linear search on unsorted data
+	 * 
+	 * @param oid to search for
+	 * @return true if found
+	 */
+	public boolean linearSearch(String oid) {
 
-	public boolean treeSearch(String oid) {
-		String[] s = oid.split(Pattern.quote("."));
-
-		Tree current = tree;
-		for (int i = 1; i < s.length; i++) {
-			int val = Integer.parseInt(s[i]);
-			if (!current.containsChildValue(val) && !current.isLeafNode()) {
-				return false;
-			}
-			current = current.getChild(val);
+		if (traps.getTrapTypeOidPrefix().size() == 0) {
+			System.out.println("Trap prefix list is empty");
+			return false;
 		}
-		return true;
-	}
 
+		Iterator<String> iter = traps.getTrapTypeOidPrefix().iterator();
+		oid = oid.trim();
+		while (iter.hasNext()) {
+			String trap = iter.next();
+			if (oid.startsWith(trap)) {
+				return true;
+			} else if (oid.length() < trap.length() && trap.startsWith(oid)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Run a half interval search on sorted data
 	 * 
 	 * @param oid to search for
 	 * @return true if found
 	 */
-	public boolean binSearch(String oid) {
+	public boolean halfSearch(String oid) {
 		if (traps.getTrapTypeOidPrefix().size() == 0) {
 			System.out.println("Trap prefix list is empty");
 			return false;
@@ -138,37 +151,31 @@ public class TrapTools {
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Run a linear search on unsorted data
-	 * 
-	 * @param oid
-	 * @return
+	 * Run tree search by splitting string on .
+	 * @param oid string containing . and int vals only
+	 * @return true if found
 	 */
-	public boolean linearSearch(String oid) {
+	public boolean treeSearch(String oid) {
+		String[] s = oid.split(Pattern.quote("."));
 
-		if (traps.getTrapTypeOidPrefix().size() == 0) {
-			System.out.println("Trap prefix list is empty");
-			return false;
-		}
-
-		Iterator<String> iter = traps.getTrapTypeOidPrefix().iterator();
-		oid = oid.trim();
-		while (iter.hasNext()) {
-			String trap = iter.next();
-			if (oid.startsWith(trap)) {
-				return true;
-			} else if (oid.length() < trap.length() && trap.startsWith(oid)) {
-				return true;
+		Tree current = tree;
+		for (int i = 1; i < s.length; i++) {
+			int val = Integer.parseInt(s[i]);
+			if (!current.containsChildValue(val) && !current.isLeafNode()) {
+				return false;
 			}
+			current = current.getChild(val);
 		}
-		return false;
+		return true;
 	}
 
+	/*
 	private int trapCount() {
 		return traps.getTrapTypeOidPrefix().size();
 	}
-
+	
 	private String getTrap(int index) {
 		if (trapCount() == 0) {
 			System.err.println("No traps loaded");
@@ -181,5 +188,6 @@ public class TrapTools {
 
 		return traps.getTrapTypeOidPrefix().get(index);
 	}
+	*/
 
 }

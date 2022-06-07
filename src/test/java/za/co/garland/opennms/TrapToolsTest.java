@@ -22,17 +22,17 @@ public class TrapToolsTest {
 
 	@Test
 	public void testSnmpDotYaml1() throws IOException {
-		assertTrue(snmp_yaml.binSearch(".1.3.6.1.4.1.9.9.117.2.0.1"));
+		assertTrue(snmp_yaml.halfSearch(".1.3.6.1.4.1.9.9.117.2.0.1"));
 	}
 
 	@Test
 	public void testSnmpDotYaml2() throws IOException {
-		assertTrue(snmp_yaml.binSearch(".1.3.6.1.4.1.9.9.117"));
+		assertTrue(snmp_yaml.halfSearch(".1.3.6.1.4.1.9.9.117"));
 	}
 
 	@Test
 	public void testSnmpDotYaml3() throws IOException {
-		assertFalse(snmp_yaml.binSearch(".1.3.6.1.4.1.9.9.118.2.0.1"));
+		assertFalse(snmp_yaml.halfSearch(".1.3.6.1.4.1.9.9.118.2.0.1"));
 	}
 
 }
