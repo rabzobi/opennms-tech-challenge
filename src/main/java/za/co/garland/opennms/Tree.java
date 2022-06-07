@@ -3,24 +3,19 @@ package za.co.garland.opennms;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Tree {
     private final List<Tree> children;
     private int value;
+	private int depth;
 
-    public Tree(int data) {
+    public Tree(int data, int depth) {
         this.children = new ArrayList<>();
         this.value = data;
+        this.depth = depth;
     }
-
-    public Tree(int data, Tree parent) {
-        // new node with a given parent
-        this.children = new ArrayList<>();
-        this.value = data;
-        //this.depth = (parent.getDepth() + 1);
-        parent.addChild(this);
-    }
-    
+  
     public boolean containsChildValue(int val) {
     	Iterator<Tree> iter = children.iterator();
 		while (iter.hasNext()) {
@@ -32,7 +27,33 @@ public class Tree {
 		return false;    	
     }
     
-    public Tree getChild(int val) {
+	/**
+	 * Run a recursive search for valid prefixes
+	 * @param array to be searched for
+	 * @return true if found
+	 */
+	public boolean treeSearch(String s) {
+		return treeSearch (("0"+s).trim().split(Pattern.quote(".")),0);
+	}  
+	
+	private boolean treeSearch(String[] s,int depth) {
+		
+		if (depth + 1 >= s.length) {
+			return true;
+		}
+		int val = Integer.parseInt(s[depth+1]);
+		Tree child = getChild(val);
+		// if we can't find a child and we're a leaf node we have a valid prefix
+		if (child == null && isLeafNode()) {
+			return true;
+		}
+		if (child == null) {			
+			return false;
+		}
+		return child.treeSearch(s, depth+1);		
+	}    
+
+	public Tree getChild(int val) {
     	Iterator<Tree> iter = children.iterator();
 		while (iter.hasNext()) {
 			Tree n = iter.next();
@@ -43,14 +64,15 @@ public class Tree {
 		return null;
     }    
 
-    public Tree addChild(int data) {
-        Tree child = new Tree(data);
-        this.children.add(child);
+    public Tree addChild(int val,int depth) {
+    	
+    	Tree c = getChild(val);
+    	Tree child = null;
+    	if (c == null) {
+    		child = new Tree(val,depth);
+    		this.children.add(child);
+    	}
         return child;
-    }
-
-    public void addChild(Tree child) {
-        this.children.add(child);
     }
 
     public int getData() {
@@ -60,5 +82,21 @@ public class Tree {
     public boolean isLeafNode() {
         return (this.children.size() == 0);
     }
+    
+    public void printTree(int depth) {
+    	Iterator<Tree> iter = children.iterator();
+    	String spaces = "";
+    	for (int i=0;i<depth;i++) {
+    		spaces += ".";
+    	}
+		while (iter.hasNext()) {
+			Tree n = iter.next();
+			System.out.println(spaces+value);
+			n.printTree(depth+1);
+		}
+    }
+    
+    
+  
 
 }

@@ -47,7 +47,7 @@ public class TrapTools {
 		case HALF:
 			return halfSearch(s);
 		case TREE:
-			return treeSearch(s);
+			return tree.treeSearch(s);
 		}
 		return false;
 	}
@@ -69,15 +69,19 @@ public class TrapTools {
 		}
 	}
 
+	/**
+	 * Build a tree from the traps which have been loaded from yaml
+	 */
 	private void buildTree() {
-		tree = new Tree(0);
+
+		tree = new Tree(0,0);
 
 		Iterator<String> iter = traps.getTrapTypeOidPrefix().iterator();
 		while (iter.hasNext()) {
 			String trap = iter.next();
 			String[] s = trap.split(Pattern.quote("."));
 			Tree current = tree;
-			int i;
+			int i; // we use i again below
 			for (i = 1; i < s.length; i++) { // skip first
 				int val = Integer.parseInt(s[i]);
 				if (!current.containsChildValue(val)) {
@@ -85,12 +89,12 @@ public class TrapTools {
 				}
 				current = current.getChild(val);
 			}
-
+			// build new sub tree
 			for (; i < s.length; i++) {
 				int val = Integer.parseInt(s[i]);
-				current = current.addChild(val);
+				current = current.addChild(val,i);
 			}
-		}
+		}		
 	}
 	
 	/**
@@ -151,43 +155,5 @@ public class TrapTools {
 		}
 		return false;
 	}
-	
-	/**
-	 * Run tree search by splitting string on .
-	 * @param oid string containing . and int vals only
-	 * @return true if found
-	 */
-	public boolean treeSearch(String oid) {
-		String[] s = oid.split(Pattern.quote("."));
-
-		Tree current = tree;
-		for (int i = 1; i < s.length; i++) {
-			int val = Integer.parseInt(s[i]);
-			if (!current.containsChildValue(val) && !current.isLeafNode()) {
-				return false;
-			}
-			current = current.getChild(val);
-		}
-		return true;
-	}
-
-	/*
-	private int trapCount() {
-		return traps.getTrapTypeOidPrefix().size();
-	}
-	
-	private String getTrap(int index) {
-		if (trapCount() == 0) {
-			System.err.println("No traps loaded");
-			return "No traps loaded";
-		}
-		if (index < 0 || index > trapCount()) {
-			System.err.println("Invalid index");
-			return "Invalid index";
-		}
-
-		return traps.getTrapTypeOidPrefix().get(index);
-	}
-	*/
 
 }
