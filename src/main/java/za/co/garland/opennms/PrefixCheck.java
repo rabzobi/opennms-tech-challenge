@@ -14,8 +14,6 @@ import za.co.garland.opennms.TrapTools.SearchAlgorithm;
  */
 public class PrefixCheck {
 	
-
-	
 	/**
 	 * Create new tool instance with a specific algorithm (default to search)
 	 * and read input from stdin, check prefix and output to std out

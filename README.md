@@ -9,6 +9,9 @@ To compile I used
  
 To build:
   mvn clean compile assembly:single
+  
+To run unit tests: 
+  mvn test
 
 To run: 
  ./check [yaml-filename]
@@ -21,6 +24,7 @@ There are 3 algorithms to choose from
 2. Binary search, sorts data and performs half searches
 3. Tree search, builds tree structure and traverses the tree following the prefix
 
-I have not done extensive performance testing but I found the binary search to have the best performance. The tree search should perform best with large amounts of data but currently the tree construction slows it down.
+I have not done extensive performance testing but I found the binary search to have the best performance.
+I found the tree construction to be slow but searches were reasonably efficient
 
-If you need some sample data, use ./scripts/gen-sample-prefixes.sh
+If you need some sample data, use: ./scripts/gen-sample-prefixes.sh
