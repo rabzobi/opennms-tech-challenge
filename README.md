@@ -15,11 +15,13 @@ To run unit tests:
 
 To run: 
  ./check YAMLFILE [INPUTFILE] [ALGORITHM]
-YAMLFILE is a compulsory config file with the prefixes in it
-INPUTFILE is an optional input (which is piped via stdin) useful for perf tests
-ALGORITHM is also optional
-Valid ALGORITHMs are linear|half|tree
-If no ALGORITHM is given it defaults to half as it has performed best
+ 
+  1. YAMLFILE is a compulsory config file with the prefixes in it
+  2. INPUTFILE is an optional input (which is piped via stdin) useful for perf tests
+  3. ALGORITHM is also optional
+  
+  Valid ALGORITHMs are linear|half|tree
+  If no ALGORITHM is given it defaults to half as it has performed best
 
 There are 3 algorithms to choose from
 1. linear= A standard linear search, queries data as is in yaml file, no need to spend time sorting
