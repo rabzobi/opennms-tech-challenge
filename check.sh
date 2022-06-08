@@ -30,9 +30,11 @@ if [ -z $FILENAME ] ; then
 	echo "If no ALGORITHM is given it defaults to half as it has performed best"
 	echo 
 
-	echo "linear= A standard linear search, queries data as is in yaml file, no need to spend time sorting"
-	echo "half= Half interval search, sorts data and performs half searches"
-	echo "tree= Tree search, builds tree structure and traverses the tree following the prefix"
+	echo "There are 3 algorithms to choose from"
+	echo "1. linear= A standard linear search, queries data as is in yaml file, no need to spend time sorting"
+	echo "2. half= Half interval search. Data is sorted at startup"
+	echo "3. tree= Tree search, traverses the tree using the given prefix"
+
 	exit 2
 fi
 
