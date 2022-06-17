@@ -93,6 +93,7 @@ public class TrapTools {
 			for (; i < s.length; i++) {
 				int val = Integer.parseInt(s[i]);
 				current = current.addChild(val,i);
+				current.setTrapString(trap);
 			}
 		}		
 	}
@@ -127,7 +128,7 @@ public class TrapTools {
 		return false;
 	}
 	
-	private boolean checkOidIsValid(String oid) {
+	static boolean checkOidIsValid(String oid) {
 		if (oid.length() <= 1) {
 			return false;
 		}

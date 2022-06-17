@@ -8,12 +8,11 @@ import java.util.regex.Pattern;
 public class Tree {
     private final List<Tree> children;
     private int value;
-	private int depth;
+	private String trap;
 
     public Tree(int data, int depth) {
         this.children = new ArrayList<>();
         this.value = data;
-        this.depth = depth;
     }
   
     public boolean containsChildValue(int val) {
@@ -27,26 +26,30 @@ public class Tree {
 		return false;    	
     }
     
+    		
 	/**
 	 * Run a recursive search for valid prefixes
 	 * @param array to be searched for
 	 * @return true if found
 	 */
 	public boolean treeSearch(String s) {
-		return treeSearch (("0"+s).trim().split(Pattern.quote(".")),0);
+		if (!TrapTools.checkOidIsValid(s)) {
+			return false;
+		}
+		return treeSearch (("0"+s).trim().split("\\."),s, 0);
 	}  
 	
-	private boolean treeSearch(String[] s,int depth) {
-		
-		if (depth + 1 >= s.length) {
-			return true;
-		}
+	private boolean treeSearch(String[] s,String ss,int depth) {
 		int val = 0;
 		try {
 			val = Integer.parseInt(s[depth+1]);
 		} catch (Exception e) {
 			return false;
 		}
+		
+		if (trap!=null && s!=null && trap.equals(ss)) {
+			return true;
+		}		
 		Tree child = getChild(val);
 		// if we can't find a child and we're a leaf node we have a valid prefix
 		if (child == null && isLeafNode()) {
@@ -55,7 +58,7 @@ public class Tree {
 		if (child == null) {			
 			return false;
 		}
-		return child.treeSearch(s, depth+1);		
+		return child.treeSearch(s,ss, depth+1);		
 	}    
 
 	public Tree getChild(int val) {
@@ -100,5 +103,9 @@ public class Tree {
 			n.printTree(depth+1);
 		}
     }
+
+	public void setTrapString(String trap2) {
+		this.trap = trap2;		
+	}
    
 }
