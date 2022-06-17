@@ -41,7 +41,12 @@ public class Tree {
 		if (depth + 1 >= s.length) {
 			return true;
 		}
-		int val = Integer.parseInt(s[depth+1]);
+		int val = 0;
+		try {
+			val = Integer.parseInt(s[depth+1]);
+		} catch (Exception e) {
+			return false;
+		}
 		Tree child = getChild(val);
 		// if we can't find a child and we're a leaf node we have a valid prefix
 		if (child == null && isLeafNode()) {
@@ -95,8 +100,5 @@ public class Tree {
 			n.printTree(depth+1);
 		}
     }
-    
-    
-  
-
+   
 }

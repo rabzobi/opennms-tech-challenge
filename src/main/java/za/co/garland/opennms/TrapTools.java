@@ -109,6 +109,10 @@ public class TrapTools {
 			System.out.println("Trap prefix list is empty");
 			return false;
 		}
+		
+		if (!checkOidIsValid(oid)) {
+			return false;
+		}		
 
 		Iterator<String> iter = traps.getTrapTypeOidPrefix().iterator();
 		oid = oid.trim();
@@ -116,11 +120,27 @@ public class TrapTools {
 			String trap = iter.next();
 			if (oid.startsWith(trap)) {
 				return true;
-			} else if (oid.length() < trap.length() && trap.startsWith(oid)) {
+			} /*else if (oid.length() < trap.length() && trap.startsWith(oid)) {
 				return true;
-			}
+			}*/
 		}
 		return false;
+	}
+	
+	private boolean checkOidIsValid(String oid) {
+		if (oid.length() <= 1) {
+			return false;
+		}
+		
+		if (oid.charAt(0) != '.') {
+			return false;
+		}
+		
+		if (!oid.matches("^[0-9.]+$")) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -134,6 +154,10 @@ public class TrapTools {
 			System.out.println("Trap prefix list is empty");
 			return false;
 		}
+		
+		if (!checkOidIsValid(oid)) {
+			return false;
+		}
 
 		int left = 0;
 		int right = traps.getTrapTypeOidPrefix().size() - 1;
@@ -143,9 +167,10 @@ public class TrapTools {
 			String trap = traps.getTrapTypeOidPrefix().get(current).trim();
 			if (oid.startsWith(trap)) {
 				return true;
-			} else if (oid.length() < trap.length() && trap.startsWith(oid)) {
+			} /* Changed criteria
+				else if (oid.length() < trap.length() && trap.startsWith(oid)) {
 				return true;
-			}
+			} */
 			// move our position in the list
 			if (trap.compareTo(oid) < 0) {
 				left = current + 1;
